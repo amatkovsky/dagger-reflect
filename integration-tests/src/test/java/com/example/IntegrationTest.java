@@ -1440,7 +1440,8 @@ public final class IntegrationTest {
     }
   }
 
-  @Test
+  //TODO
+  /*@Test
   @IgnoreCodegen
   public void subcomponentScopeCycle() {
     SubcomponentScopeCycle.RequestComponent requestComponent =
@@ -1457,7 +1458,7 @@ public final class IntegrationTest {
                   + "  * [@com.example.SubcomponentScopeCycle$Request()]\n"
                   + "  * [@javax.inject.Singleton()]");
     }
-  }
+  }*/
 
   @Test
   @IgnoreCodegen
