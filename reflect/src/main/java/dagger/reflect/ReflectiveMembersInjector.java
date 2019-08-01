@@ -15,6 +15,12 @@
  */
 package dagger.reflect;
 
+import static dagger.reflect.Reflection.findQualifier;
+import static dagger.reflect.Reflection.tryInvoke;
+import static dagger.reflect.Reflection.trySet;
+
+import dagger.MembersInjector;
+import dagger.reflect.Binding.LinkedBinding;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,15 +33,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import javax.inject.Inject;
-
-import dagger.MembersInjector;
-import dagger.reflect.Binding.LinkedBinding;
-
-import static dagger.reflect.Reflection.findQualifier;
-import static dagger.reflect.Reflection.tryInvoke;
-import static dagger.reflect.Reflection.trySet;
 
 final class ReflectiveMembersInjector<T> implements MembersInjector<T> {
   static <T> MembersInjector<T> create(Class<T> cls, Scope scope) {
@@ -47,7 +45,8 @@ final class ReflectiveMembersInjector<T> implements MembersInjector<T> {
       if (genericSuperclass instanceof ParameterizedType) {
         ParameterizedType type = (ParameterizedType) genericSuperclass;
         Type[] actualTypeArguments = type.getActualTypeArguments();
-        TypeVariable<? extends Class<?>>[] typeParameters = ((Class) type.getRawType()).getTypeParameters();
+        TypeVariable<? extends Class<?>>[] typeParameters =
+            ((Class) type.getRawType()).getTypeParameters();
         for (int i = 0; i < actualTypeArguments.length; i++) {
           Type actualTypeArgument = actualTypeArguments[i];
           if (!(actualTypeArgument instanceof Class)) {
@@ -96,11 +95,9 @@ final class ReflectiveMembersInjector<T> implements MembersInjector<T> {
               typeArguments[i] = actualTypeArgument;
             }
           }
-          resultType = new TypeUtil.ParameterizedTypeImpl(
-              parameterizedType.getOwnerType(),
-              parameterizedType.getRawType(),
-              typeArguments
-          );
+          resultType =
+              new TypeUtil.ParameterizedTypeImpl(
+                  parameterizedType.getOwnerType(), parameterizedType.getRawType(), typeArguments);
         } else if (genericType instanceof TypeVariable) {
           TypeVariable<?> typeVariable = (TypeVariable<?>) genericType;
           resultType = genericMap.get(typeVariable.getName());

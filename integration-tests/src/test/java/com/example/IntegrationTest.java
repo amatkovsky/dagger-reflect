@@ -291,8 +291,10 @@ public final class IntegrationTest {
   @IgnoreCodegen
   @Test
   public void test() {
-    ProviderMultipleGenericIntoJustInTime1 c = backend.create(ProviderMultipleGenericIntoJustInTime1.class);
-    ProviderMultipleGenericIntoJustInTime1.ThingImpl instance = new ProviderMultipleGenericIntoJustInTime1.ThingImpl();
+    ProviderMultipleGenericIntoJustInTime1 c =
+        backend.create(ProviderMultipleGenericIntoJustInTime1.class);
+    ProviderMultipleGenericIntoJustInTime1.ThingImpl instance =
+        new ProviderMultipleGenericIntoJustInTime1.ThingImpl();
     c.inject(instance);
     assertThat(instance.valueProvider.get()).isNotNull();
     assertThat(instance.tProvider.get()).isNotNull();
@@ -1413,7 +1415,7 @@ public final class IntegrationTest {
     }
   }
 
-  //TODO FIX
+  // TODO FIX
   /*@Test
   @ReflectBug("check not implemented")
   @IgnoreCodegen
@@ -1440,7 +1442,7 @@ public final class IntegrationTest {
     }
   }
 
-  //TODO
+  // TODO
   /*@Test
   @IgnoreCodegen
   public void subcomponentScopeCycle() {

@@ -1,7 +1,9 @@
 package dagger.reflect;
 
-import org.jetbrains.annotations.Nullable;
-
+import dagger.Lazy;
+import dagger.reflect.Binding.LinkedBinding;
+import dagger.reflect.Binding.UnlinkedBinding;
+import dagger.reflect.TypeUtil.ParameterizedTypeImpl;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
@@ -12,14 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
-
-import dagger.Lazy;
-import dagger.reflect.Binding.LinkedBinding;
-import dagger.reflect.Binding.UnlinkedBinding;
-import dagger.reflect.TypeUtil.ParameterizedTypeImpl;
+import org.jetbrains.annotations.Nullable;
 
 final class Scope {
   private final ConcurrentHashMap<Key, Binding> bindings;
@@ -32,10 +29,11 @@ final class Scope {
   final Scope.Builder builder;
 
   private Scope(
-          ConcurrentHashMap<Key, Binding> bindings,
-          JustInTimeLookup.Factory jitLookupFactory,
-          Set<Annotation> annotations,
-          @Nullable Scope parent, Builder builder) {
+      ConcurrentHashMap<Key, Binding> bindings,
+      JustInTimeLookup.Factory jitLookupFactory,
+      Set<Annotation> annotations,
+      @Nullable Scope parent,
+      Builder builder) {
     this.bindings = bindings;
     this.jitLookupFactory = jitLookupFactory;
     this.annotations = annotations;
@@ -124,8 +122,8 @@ final class Scope {
    *
    * @param linker An optional {@link Linker} to use. One will be created if null and needed.
    */
-  private @Nullable LinkedBinding<?> findExistingBinding(Key key, @Nullable Linker linker,
-                                                         boolean shouldLookInParent) {
+  private @Nullable LinkedBinding<?> findExistingBinding(
+      Key key, @Nullable Linker linker, boolean shouldLookInParent) {
     Binding binding = bindings.get(key);
     if (binding != null) {
       return binding instanceof LinkedBinding<?>
@@ -377,7 +375,8 @@ final class Scope {
       int added = 0;
       while (parentScope != null) {
         Scope.Builder parentBuilder = parentScope.builder;
-        for (Map.Entry<Key, Map<Object, Binding>> entry : parentBuilder.keyToMapBindings.entrySet()) {
+        for (Map.Entry<Key, Map<Object, Binding>> entry :
+            parentBuilder.keyToMapBindings.entrySet()) {
           Key key = entry.getKey();
           if (keyToMapBindings.containsKey(key)) {
             Map<Object, Binding> objectBindingMap = keyToMapBindings.get(key);
